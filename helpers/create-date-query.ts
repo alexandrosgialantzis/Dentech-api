@@ -8,27 +8,27 @@ export const createDateQuery = (
   let dateQuery = {};
 
   if (year) {
-    const startDate = new Date(Number(year), 0, 1);
-    const endDate = new Date(Number(year) + 1, 0, 1);
+    const firstDay = new Date(Number(year), 0, 1);
+    const lastDay = new Date(Number(year) + 1, 0, 1);
 
     switch (status) {
       case OrderStatus.NOT_SEND:
         dateQuery = {
-          $or: [{ takenDate: { $gte: startDate, $lt: endDate } }],
+          $or: [{ takenDate: { $gte: firstDay, $lt: lastDay } }],
         };
         break;
 
       case OrderStatus.SEND:
         dateQuery = {
-          $or: [{ sendDate: { $gte: startDate, $lt: endDate } }],
+          $or: [{ sendDate: { $gte: firstDay, $lt: lastDay } }],
         };
         break;
 
       default:
         dateQuery = {
           $or: [
-            { sendDate: { $gte: startDate, $lt: endDate } },
-            { takenDate: { $gte: startDate, $lt: endDate } },
+            { sendDate: { $gte: firstDay, $lt: lastDay } },
+            { takenDate: { $gte: firstDay, $lt: lastDay } },
           ],
         };
         break;
