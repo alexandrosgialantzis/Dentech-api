@@ -1,4 +1,4 @@
-import { IOrder } from '../interfaces_enums/interfaces';
+import { IOrder } from '../types/interfaces';
 import { NextFunction, Request, Response } from 'express';
 import { BadRequestError } from '../errors/bad-request';
 import { checkDate } from '../helpers/check-date';

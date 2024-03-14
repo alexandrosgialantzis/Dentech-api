@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import StatusCodes from 'http-status-codes';
-import { ICustomError, IUpdatedError } from '../interfaces_enums/interfaces';
+import { ICustomError, IUpdatedError } from '../types/interfaces';
 
 export const errorHandlerMiddleware = (
   err: IUpdatedError,

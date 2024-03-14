@@ -1,8 +1,8 @@
 import { ForbiddenError } from '../errors/forbidden';
-import { IUserWithId } from '../interfaces_enums/interfaces';
+import { IUserWithId } from '../types/interfaces';
 import { Request, Response, NextFunction } from 'express';
 import { BadRequestError } from '../errors/bad-request';
-import { Roles } from '../interfaces_enums/enums';
+import { Roles } from '../types/enums';
 import { isValidToken } from '../helpers/jwt';
 
 export const authenticateUser = async (

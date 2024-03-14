@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { BadRequestError } from '../errors/bad-request';
-import { IOrder } from '../interfaces_enums/interfaces';
+import { IOrder } from '../types/interfaces';
 
 export const checkCosts = async (
   req: Request,

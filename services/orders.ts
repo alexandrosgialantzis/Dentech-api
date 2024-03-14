@@ -1,41 +1,74 @@
 import mongoose from 'mongoose';
 import {
-  ICalcCosts,
   IOrder,
+  IOrderParams,
   IOrderPayload,
   IPopulate,
   IProduct,
   IUserWithId,
-} from '../interfaces_enums/interfaces';
+} from '../types/interfaces';
 import Order from '../models/Order';
 import Product from '../models/Product';
 import { DataLayerService } from './general-services/data-layer';
 import { populateOrders } from './populate/polulate';
 import { calcCosts } from '../helpers/calc-costs';
 import { BadRequestError } from '../errors/bad-request';
+import { createSearchQuery } from '../helpers/create-search-query';
+import { createDateQuery } from '../helpers/create-date-query';
+import { Roles } from '../types/enums';
+import { ForbiddenError } from '../errors/forbidden';
 
 export class OrderService extends DataLayerService<IOrder> {
   private select: string;
   private populateOpt: IPopulate[];
+  private searchFields: string[];
 
   constructor() {
     super(Order);
     this.select = '-createdAt';
     this.populateOpt = populateOrders;
+    this.searchFields = ['numberOfOrder', 'description'];
   }
 
-  public async getOrders() {
-    return await Order.find().select(this.select).populate(this.populateOpt);
+  public async getOrders(params: IOrderParams) {
+    const { year, search, status } = params;
+
+    const searchQuery = createSearchQuery(search, this.searchFields);
+    const dateQuery = createDateQuery(year, status);
+
+    return await Order.find({
+      ...dateQuery,
+      ...searchQuery,
+    })
+      .select(this.select)
+      .populate(this.populateOpt);
   }
 
-  public async getOrderByDentistId(dentistId: string) {
-    return await Order.find({ dentist: dentistId })
+  public async getOrderByDentistId(dentistId: string, params?: IOrderParams) {
+    const { year, search, status } = params as IOrderParams;
+
+    const query = { dentist: dentistId };
+    const searchQuery = createSearchQuery(search, this.searchFields);
+    const dateQuery = createDateQuery(year, status);
+
+    return await Order.find({ ...query, ...searchQuery, ...dateQuery })
       .populate(this.populateOpt)
       .select(this.select);
   }
 
-  public async getSingleOrder(orderId: string) {
-    return await this.getOne(orderId, this.select, this.populateOpt);
+  public async getSingleOrder(orderId: string, user: IUserWithId) {
+    const { role, userId } = user;
+
+    const order = await this.getOne(orderId, this.select, this.populateOpt);
+    const { dentist } = order;
+
+    if (dentist.toString() !== userId.toString() && role === Roles.DENTIST) {
+      throw new ForbiddenError(
+        'Δεν επιτρέπεται να δείτε άλλων οδοντιάτρων παραγγελίες!'
+      );
+    }
+
+    return order;
   }
 
   public async deleteOrder(orderId: string) {
@@ -147,13 +180,13 @@ export class OrderService extends DataLayerService<IOrder> {
     const data = {
       takenDate: payload.takenDate,
       sendDate: payload.sendDate,
-      unPaid: unpaid ? unpaid : order.unPaid,
+      unPaid: unpaid || order.unPaid,
       totalCost: total,
       paid,
       dentist: payload.dentist,
       description: payload.description,
       products: products.map((id) => new mongoose.Types.ObjectId(id)),
-    };
+    } as IOrder;
 
     const updateOrder = await this.update(
       orderId,

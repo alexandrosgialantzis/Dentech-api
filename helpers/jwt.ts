@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { InternalServerError } from '../errors/internal-server-error';
 import { Response } from 'express';
-import { IUser, IUserWithId } from '../interfaces_enums/interfaces';
+import { IUser, IUserWithId } from '../types/interfaces';
 
 const { sign, verify } = jwt;
 

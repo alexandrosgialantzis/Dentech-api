@@ -1,5 +1,5 @@
 import { Model } from 'mongoose';
-import { IPopulate } from '../../interfaces_enums/interfaces';
+import { IPopulate } from '../../types/interfaces';
 import { createSearchQuery } from '../../helpers/create-search-query';
 import { BadRequestError } from '../../errors/bad-request';
 

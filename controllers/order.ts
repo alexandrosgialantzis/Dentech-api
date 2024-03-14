@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { OrderService } from '../services/orders';
 import { StatusCodes } from 'http-status-codes';
-import { IUserWithId } from '../interfaces_enums/interfaces';
+import { IUserWithId } from '../types/interfaces';
+import { OrderStatus } from '../types/enums';
 
 export class OrderController {
   private serv: OrderService;
@@ -42,13 +43,19 @@ export class OrderController {
   }
 
   public async getOrders(req: Request, res: Response) {
-    const orders = await this.serv.getOrders();
+    const { year, search, status } = req.params;
+    const orders = await this.serv.getOrders({
+      year,
+      search,
+      status: status as OrderStatus,
+    });
     res.status(StatusCodes.OK).json({ orders, totalCount: orders.length });
   }
 
   public async getSingleOrder(req: Request, res: Response) {
     const { id } = req.params;
-    const order = await this.serv.getSingleOrder(id);
+    const { currentUser } = req;
+    const order = await this.serv.getSingleOrder(id, currentUser);
     res.status(StatusCodes.OK).json({ order });
   }
 
@@ -60,7 +67,14 @@ export class OrderController {
 
   public async getMyOrders(req: Request, res: Response) {
     const { userId } = req.currentUser as IUserWithId;
-    const orders = await this.serv.getOrderByDentistId(userId.toString());
+    const { year, search, status } = req.params;
+
+    const orders = await this.serv.getOrderByDentistId(userId.toString(), {
+      year,
+      search,
+      status: status as OrderStatus,
+    });
+
     res.status(StatusCodes.OK).json({ orders, totalCount: orders.length });
   }
 }

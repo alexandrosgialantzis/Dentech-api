@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { UserService } from '../services/user';
-import { IUserWithId } from '../interfaces_enums/interfaces';
+import { IUserWithId } from '../types/interfaces';
 import { reattachTokens } from '../helpers/re-attack-tokens';
-import { ForbiddenError } from '../errors/forbidden';
-import User from '../models/User';
 
 export class UserController {
   private serv: UserService;

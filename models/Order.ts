@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { IOrder } from '../interfaces_enums/interfaces';
+import { IOrder } from '../types/interfaces';
 
 const orderSchema = new Schema<IOrder>(
   {
@@ -36,6 +36,7 @@ const orderSchema = new Schema<IOrder>(
     description: {
       type: String,
     },
+    numberOfOrder: { type: String, unique: true },
     products: {
       type: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
       required: [true, 'Προσθέστε προιόντα.'],
@@ -43,6 +44,16 @@ const orderSchema = new Schema<IOrder>(
   },
   { timestamps: true, versionKey: false }
 );
+
+orderSchema.pre('save', async function (next) {
+  if (this.isNew) {
+    const lastOrder = await Order.findOne().sort({ numberOfOrder: -1 });
+    this.numberOfOrder = lastOrder?.numberOfOrder
+      ? (Number(lastOrder.numberOfOrder) + 1).toString()
+      : '1';
+  }
+  next();
+});
 
 const Order = mongoose.model<IOrder>('Order', orderSchema);
 

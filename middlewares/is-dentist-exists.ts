@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { NotFoundError } from '../errors/not-found';
-import { IOrder } from '../interfaces_enums/interfaces';
+import { IOrder } from '../types/interfaces';
 import User from '../models/User';
-import { Roles } from '../interfaces_enums/enums';
+import { Roles } from '../types/enums';
 
 export const checkDentist =
   (isUpdating = false) =>

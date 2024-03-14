@@ -1,9 +1,9 @@
 import { UnauthorizedError } from '../errors/unauthorized';
 import { createTokenUser } from '../helpers/create-token-user';
-import { IUser } from '../interfaces_enums/interfaces';
+import { IUser } from '../types/interfaces';
 import { DataLayerService } from './general-services/data-layer';
 import User from '../models/User';
-import { Roles } from '../interfaces_enums/enums';
+import { Roles } from '../types/enums';
 
 export class AuthService extends DataLayerService<IUser> {
   constructor() {

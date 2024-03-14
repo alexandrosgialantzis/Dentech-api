@@ -1,5 +1,5 @@
 import { ConflictError } from './../errors/conflict';
-import { IUser } from '../interfaces_enums/interfaces';
+import { IUser } from '../types/interfaces';
 import { NextFunction, Request, Response } from 'express';
 
 export const hasRoleProperty = (

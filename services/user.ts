@@ -3,8 +3,8 @@ import { BadRequestError } from '../errors/bad-request';
 import User from '../models/User';
 import { ForbiddenError } from '../errors/forbidden';
 import { createTokenUser } from '../helpers/create-token-user';
-import { IPasswordPayload, IUser } from '../interfaces_enums/interfaces';
-import { Roles } from '../interfaces_enums/enums';
+import { IPasswordPayload, IUser } from '../types/interfaces';
+import { Roles } from '../types/enums';
 
 export class UserService extends DataLayerService<IUser> {
   private select: string;

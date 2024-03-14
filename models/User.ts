@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { Roles } from '../interfaces_enums/enums';
-import { IUser } from '../interfaces_enums/interfaces';
+import { Roles } from '../types/enums';
+import { IUser } from '../types/interfaces';
 import {
   validateCellPhone,
   validateTelephone,
@@ -39,7 +39,6 @@ const userSchema = new Schema<IUser>(
     },
     cellPhone: {
       type: Number,
-      unique: true,
       sparse: true,
       validate: [
         validateCellPhone,
@@ -48,7 +47,6 @@ const userSchema = new Schema<IUser>(
     },
     telephone: {
       type: Number,
-      unique: true,
       sparse: true,
       validate: [
         validateTelephone,

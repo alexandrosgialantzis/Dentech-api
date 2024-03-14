@@ -1,7 +1,7 @@
 import { FilterQuery } from 'mongoose';
 
 export const createSearchQuery = <T>(
-  searchString: string,
+  searchString: string = '',
   fields: Array<keyof T>
 ): FilterQuery<T> => {
   if (typeof searchString !== 'string' || searchString.trim() === '') {

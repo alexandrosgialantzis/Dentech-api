@@ -2,7 +2,7 @@ import { OrderController } from './../controllers/order';
 import express from 'express';
 import { isEntityExists } from '../middlewares/is-entity-exists';
 import { authorizePermissions } from '../middlewares/auth';
-import { Roles } from '../interfaces_enums/enums';
+import { Roles } from '../types/enums';
 import Order from '../models/Order';
 import { hasCreatedBy } from '../middlewares/has-created-by';
 import {
@@ -34,7 +34,7 @@ router.get(
 );
 router.get(
   '/:id/get-single-order',
-  authorizePermissions(Roles.ADMIN),
+  authorizePermissions(Roles.ADMIN, Roles.DENTIST),
   isEntityExists(Order),
   orderController.getSingleOrder.bind(orderController)
 );

@@ -1,4 +1,4 @@
-import { IUser, IUserWithId } from '../interfaces_enums/interfaces';
+import { IUser, IUserWithId } from '../types/interfaces';
 
 export const createTokenUser = (user: IUser) =>
   ({

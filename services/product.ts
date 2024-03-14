@@ -1,9 +1,5 @@
 import { DataLayerService } from './general-services/data-layer';
-import {
-  IPopulate,
-  IProduct,
-  IUserWithId,
-} from '../interfaces_enums/interfaces';
+import { IPopulate, IProduct, IUserWithId } from '../types/interfaces';
 import Product from '../models/Product';
 import { populateProducts } from './populate/polulate';
 import Order from '../models/Order';

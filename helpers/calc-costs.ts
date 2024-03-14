@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { BadRequestError } from '../errors/bad-request';
-import { ICalcCosts } from '../interfaces_enums/interfaces';
+import { ICalcCosts } from '../types/interfaces';
 import Product from '../models/Product';
 
 export const calcCosts = async (

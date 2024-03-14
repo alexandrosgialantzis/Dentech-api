@@ -1,4 +1,4 @@
-import { Roles } from './enums';
+import { OrderStatus, Roles } from './enums';
 import { Document, Types } from 'mongoose';
 
 export interface ICustomError {
@@ -72,6 +72,7 @@ export interface IOrder extends Document {
   unPaid: number;
   paid: number;
   description: string;
+  numberOfOrder: string;
   products: Types.ObjectId[];
 }
 
@@ -88,4 +89,17 @@ export interface IOrderPayload extends Document {
 export interface ICalcCosts {
   totalCost: number;
   unPaid: number;
+}
+
+export interface IOrderParams {
+  year?: string;
+  search?: string;
+  status?: OrderStatus;
+}
+
+export interface IDateQuery {
+  $or?: [
+    { takenDate?: { $gte: Date; $lt: Date } },
+    { sendDate?: { $gte: Date; $lt: Date } }
+  ];
 }

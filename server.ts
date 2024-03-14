@@ -4,15 +4,18 @@ import dotenv from 'dotenv';
 import 'express-async-errors';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import mongoSanitize from 'express-mongo-sanitize';
+import morgan from 'morgan';
+import rateLimit from 'express-rate-limit';
 
 import { InternalServerError } from './errors/internal-server-error';
 import { connectDB } from './db/connect';
-import { IUserWithId } from './interfaces_enums/interfaces';
+import { IUserWithId } from './types/interfaces';
 import { notFoundMiddleware } from './middlewares/not-found';
 import { errorHandlerMiddleware } from './middlewares/error-handler';
 import { headersMiddleware } from './middlewares/headers';
 import { authenticateUser, authorizePermissions } from './middlewares/auth';
-import { Roles } from './interfaces_enums/enums';
+import { Roles } from './types/enums';
 
 //routes
 import authRouter from './routes/auth';
@@ -20,9 +23,13 @@ import userRouter from './routes/user';
 import productRouter from './routes/product';
 import orderRouter from './routes/order';
 
-const corsObject = {
+const corsOpt = {
   origin: true,
   credentials: true,
+};
+const limiterOpt = {
+  windowMs: 15 * 60 * 1000,
+  max: 100,
 };
 
 const server = express();
@@ -32,13 +39,16 @@ dotenv.config();
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(cookieParser(process.env.JWT_SECRET));
-server.use(cors(corsObject));
+server.use(cors(corsOpt));
+server.use(express.json());
+server.use(mongoSanitize());
+server.use(morgan('dev'));
+server.use(rateLimit(limiterOpt));
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
-      currentUser?: IUserWithId;
+      currentUser: IUserWithId;
     }
   }
 }

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { NotFoundError } from '../errors/not-found';
 import { BadRequestError } from '../errors/bad-request';
-import { IOrder, IOrderPayload } from '../interfaces_enums/interfaces';
+import { IOrder, IOrderPayload } from '../types/interfaces';
 import Product from '../models/Product';
 
 export const checkProducts = async (

@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import { ProductService } from '../services/product';
 import { StatusCodes } from 'http-status-codes';
-import { IUserWithId } from '../interfaces_enums/interfaces';
-import Product from '../models/Product';
+import { IUserWithId } from '../types/interfaces';
 
 export class ProductController {
   private serv: ProductService;

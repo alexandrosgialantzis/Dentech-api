@@ -3,7 +3,7 @@ import { isEntityExists } from '../middlewares/is-entity-exists';
 import User from '../models/User';
 import { UserController } from '../controllers/user';
 import { authorizePermissions } from '../middlewares/auth';
-import { Roles } from '../interfaces_enums/enums';
+import { Roles } from '../types/enums';
 import { verifyAccountOwnership } from '../middlewares/verify-ownership';
 import { hasRoleProperty } from '../middlewares/has-role';
 
