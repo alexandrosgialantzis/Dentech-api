@@ -11,24 +11,28 @@ export const createDateQuery = (
     const startDate = new Date(Number(year), 0, 1);
     const endDate = new Date(Number(year) + 1, 0, 1);
 
-    if (status === OrderStatus.NOT_SEND) {
-      dateQuery = {
-        $or: [{ takenDate: { $gte: startDate, $lt: endDate } }],
-      };
-    }
+    switch (status) {
+      case OrderStatus.NOT_SEND:
+        dateQuery = {
+          $or: [{ takenDate: { $gte: startDate, $lt: endDate } }],
+        };
+        break;
 
-    if (status === OrderStatus.SEND) {
-      dateQuery = {
-        $or: [{ sendDate: { $gte: startDate, $lt: endDate } }],
-      };
-    }
+      case OrderStatus.SEND:
+        dateQuery = {
+          $or: [{ sendDate: { $gte: startDate, $lt: endDate } }],
+        };
+        break;
 
-    dateQuery = {
-      $or: [
-        { sendDate: { $gte: startDate, $lt: endDate } },
-        { takenDate: { $gte: startDate, $lt: endDate } },
-      ],
-    };
+      default:
+        dateQuery = {
+          $or: [
+            { sendDate: { $gte: startDate, $lt: endDate } },
+            { takenDate: { $gte: startDate, $lt: endDate } },
+          ],
+        };
+        break;
+    }
   }
 
   return dateQuery;
