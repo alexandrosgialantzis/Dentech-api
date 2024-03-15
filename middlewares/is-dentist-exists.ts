@@ -13,11 +13,12 @@ export const checkDentist =
       return next();
     }
 
-    const den = await User.findOne({ _id: dentist });
-    if (!den) {
+    const user = await User.findOne({ _id: dentist });
+
+    if (!user) {
       throw new NotFoundError('Δεν βρέθηκε ο οδοντίατρος!');
     }
-    if (den.role !== Roles.DENTIST) {
+    if (user.role !== Roles.DENTIST) {
       throw new NotFoundError('Ο χρήστης δεν είναι οδοντίατρος!');
     }
 

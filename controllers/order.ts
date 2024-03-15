@@ -43,19 +43,23 @@ export class OrderController {
   }
 
   public async getOrders(req: Request, res: Response) {
-    const { year, search, status } = req.params;
+    const { year, search, status } = req.query;
+
     const orders = await this.serv.getOrders({
-      year,
-      search,
+      year: year as string,
+      search: search as string,
       status: status as OrderStatus,
     });
+
     res.status(StatusCodes.OK).json({ orders, totalCount: orders.length });
   }
 
   public async getSingleOrder(req: Request, res: Response) {
     const { id } = req.params;
     const { currentUser } = req;
+
     const order = await this.serv.getSingleOrder(id, currentUser);
+
     res.status(StatusCodes.OK).json({ order });
   }
 
@@ -66,12 +70,12 @@ export class OrderController {
   }
 
   public async getMyOrders(req: Request, res: Response) {
-    const { userId } = req.currentUser as IUserWithId;
-    const { year, search, status } = req.params;
+    const { userId } = req.currentUser;
+    const { year, search, status } = req.query;
 
     const orders = await this.serv.getOrderByDentistId(userId.toString(), {
-      year,
-      search,
+      year: year as string,
+      search: search as string,
       status: status as OrderStatus,
     });
 

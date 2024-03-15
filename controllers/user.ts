@@ -18,10 +18,9 @@ export class UserController {
   public async updateUser(req: Request, res: Response) {
     const { body } = req;
     const { id } = req.params;
-    const { currentUser } = req;
 
     const user = await this.serv.updateUser(body, id);
-    await reattachTokens(res, (currentUser as IUserWithId).userId.toString());
+    await reattachTokens(res, id);
 
     res.status(StatusCodes.OK).json({
       user,
@@ -41,8 +40,7 @@ export class UserController {
 
   public async deleteUser(req: Request, res: Response) {
     const { id } = req.params;
-    const { currentUser } = req;
-    const { role } = currentUser!;
+    const { role } = req.currentUser;
 
     const user = await this.serv.deleteUser(id, role);
 
@@ -61,9 +59,11 @@ export class UserController {
 
   public async getUsers(req: Request, res: Response) {
     const { searchString } = req.query;
+    const { userId } = req.currentUser;
+
     const users = await this.serv.getUsers(
       searchString as string,
-      req.currentUser?.userId.toString() as string
+      userId.toString()
     );
 
     res.status(StatusCodes.OK).json({ users, totalCount: users.length });
@@ -88,7 +88,7 @@ export class UserController {
     const { id } = req.params;
     const { body, currentUser } = req;
     const { role } = body;
-    const { userId } = currentUser!;
+    const { userId } = currentUser;
 
     const message = await this.serv.changeUserRole(id, role, userId.toString());
 

@@ -23,14 +23,8 @@ export class ProductController {
   }
 
   public async createProduct(req: Request, res: Response) {
-    const { body } = req;
-    const { currentUser } = req;
-
-    const product = await this.serv.createProduct(
-      body,
-      currentUser as IUserWithId
-    );
-
+    const { body, currentUser } = req;
+    const product = await this.serv.createProduct(body, currentUser);
     res
       .status(StatusCodes.OK)
       .json({ product, message: 'Το προιόν δημιουργήθηκε!' });

@@ -7,8 +7,9 @@ export const verifyAccountOwnership = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
+  const { userId } = req.currentUser;
 
-  if (id !== req.currentUser?.userId.toString()) {
+  if (id !== userId.toString()) {
     throw new UnauthorizedError('Απαγορεύεται η πρόσβαση, προσπαθήστε πάλι!');
   }
 

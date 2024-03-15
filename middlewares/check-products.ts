@@ -9,18 +9,17 @@ export const checkProducts = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { body } = req;
-  const payload: IOrderPayload = body;
+  const { add, remove } = req.body as IOrderPayload;
 
-  if (!payload.add?.length && payload.remove?.length) {
+  if (!add?.length && !remove?.length) {
     return next();
   }
 
   const addSet = new Set();
   const removeSet = new Set();
 
-  if (payload.add) {
-    for (const prod of payload.add) {
+  if (add) {
+    for (const prod of add) {
       addSet.add(prod);
 
       const product = await Product.findOne({ _id: prod });
@@ -30,8 +29,8 @@ export const checkProducts = async (
     }
   }
 
-  if (payload.remove) {
-    for (const prod of payload.remove ?? []) {
+  if (remove) {
+    for (const prod of remove ?? []) {
       removeSet.add(prod);
 
       const product = await Product.findOne({ _id: prod });
@@ -41,11 +40,11 @@ export const checkProducts = async (
     }
   }
 
-  if (removeSet.size !== payload.remove?.length) {
+  if (removeSet.size !== remove?.length) {
     throw new BadRequestError('Υπάρχουν διπλότυπα προιόντα στην παραγγελία!');
   }
 
-  if (addSet.size !== payload.add?.length) {
+  if (addSet.size !== add?.length) {
     throw new BadRequestError('Υπάρχουν διπλότυπα προιόντα στην παραγγελία!');
   }
 
