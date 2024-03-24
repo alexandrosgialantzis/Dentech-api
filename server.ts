@@ -22,6 +22,7 @@ import authRouter from './routes/auth';
 import userRouter from './routes/user';
 import productRouter from './routes/product';
 import orderRouter from './routes/order';
+import keepRouter from './routes/keep';
 
 const corsOpt = {
   origin: true,
@@ -55,6 +56,7 @@ declare global {
 
 const port = process.env.PORT || 4500;
 
+server.use('/api/v1', keepRouter);
 server.use('/api/v1/auth', authRouter);
 server.use('/api/v1/user', authenticateUser, userRouter);
 server.use('/api/v1/order', authenticateUser, orderRouter);
