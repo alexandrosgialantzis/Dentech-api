@@ -73,6 +73,7 @@ export interface IOrder extends Document {
   paid: number;
   description: string;
   numberOfOrder: string;
+  status: OrderStatus;
   products: Types.ObjectId[];
 }
 

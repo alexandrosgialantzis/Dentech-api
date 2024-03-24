@@ -29,7 +29,7 @@ const corsOpt = {
 };
 const limiterOpt = {
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 30000,
 };
 
 const server = express();

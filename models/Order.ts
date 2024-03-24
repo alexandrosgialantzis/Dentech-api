@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { IOrder } from '../types/interfaces';
+import { OrderStatus } from '../types/enums';
 
 const orderSchema = new Schema<IOrder>(
   {
@@ -37,6 +38,14 @@ const orderSchema = new Schema<IOrder>(
       type: String,
     },
     numberOfOrder: { type: String, unique: true },
+    status: {
+      type: String,
+      enum: {
+        values: Object.values(OrderStatus),
+        message: "Η τιμή '{VALUE}' δεν είναι σωστή για το πέδιο του ρόλου.",
+      },
+      default: OrderStatus.SEND,
+    },
     products: {
       type: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
       required: [true, 'Προσθέστε προιόντα.'],
@@ -47,9 +56,12 @@ const orderSchema = new Schema<IOrder>(
 
 orderSchema.pre('save', async function (next) {
   if (this.isNew) {
-    const lastOrder = await Order.findOne().sort({ numberOfOrder: -1 });
-    this.numberOfOrder = lastOrder?.numberOfOrder
-      ? (Number(lastOrder.numberOfOrder) + 1).toString()
+    const lastOrder = await Order.find().skip(
+      (await Order.countDocuments()) - 1
+    );
+
+    this.numberOfOrder = lastOrder[0]?.numberOfOrder
+      ? (Number(lastOrder[0].numberOfOrder) + 1).toString()
       : '1';
   }
   next();

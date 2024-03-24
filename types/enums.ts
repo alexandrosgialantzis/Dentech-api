@@ -5,6 +5,6 @@ export enum Roles {
 }
 
 export enum OrderStatus {
-  SEND = 'send',
-  NOT_SEND = 'not_send',
+  SEND = 'Απεσταλμένη',
+  NOT_SEND = 'Μη απεσταλμένη',
 }

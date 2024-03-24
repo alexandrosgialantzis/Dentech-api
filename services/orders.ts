@@ -14,9 +14,10 @@ import { populateOrders } from './populate/polulate';
 import { calcCosts } from '../helpers/calc-costs';
 import { BadRequestError } from '../errors/bad-request';
 import { createSearchQuery } from '../helpers/create-search-query';
-import { createDateQuery } from '../helpers/create-date-query';
-import { Roles } from '../types/enums';
+import { OrderStatus, Roles } from '../types/enums';
+import { createStatusSearchQuery } from '../helpers/create-search-with-status';
 import { ForbiddenError } from '../errors/forbidden';
+import { createDateQuery } from '../helpers/create-date-query';
 
 export class OrderService extends DataLayerService<IOrder> {
   private select: string;
@@ -27,17 +28,13 @@ export class OrderService extends DataLayerService<IOrder> {
     super(Order);
     this.select = '-createdAt';
     this.populateOpt = populateOrders;
-    this.searchFields = ['numberOfOrder', 'description'];
+    this.searchFields = ['numberOfOrder', 'description', 'status'];
   }
 
-  public async getOrders(params: IOrderParams) {
-    const { year, search, status } = params;
-
-    const searchQuery = createSearchQuery(search, this.searchFields);
-    const dateQuery = createDateQuery(year, status);
+  public async getOrders(search: OrderStatus | string) {
+    const searchQuery = createStatusSearchQuery(search, this.searchFields);
 
     return await Order.find({
-      ...dateQuery,
       ...searchQuery,
     })
       .select(this.select)
@@ -45,13 +42,15 @@ export class OrderService extends DataLayerService<IOrder> {
   }
 
   public async getOrderByDentistId(dentistId: string, params?: IOrderParams) {
-    const { year, search, status } = params as IOrderParams;
+    const { search } = params ?? ({} as IOrderParams);
 
     const query = { dentist: dentistId };
-    const searchQuery = createSearchQuery(search, this.searchFields);
-    const dateQuery = createDateQuery(year, status);
+    const searchQuery = createStatusSearchQuery(
+      search as string | OrderStatus,
+      this.searchFields
+    );
 
-    return await Order.find({ ...query, ...searchQuery, ...dateQuery })
+    return await Order.find({ ...query, ...searchQuery })
       .populate(this.populateOpt)
       .select(this.select);
   }
@@ -60,12 +59,14 @@ export class OrderService extends DataLayerService<IOrder> {
     const { role, userId } = user;
 
     const order = await this.getOne(orderId, this.select, this.populateOpt);
-    const { dentist } = order;
 
-    if (dentist.toString() !== userId.toString() && role === Roles.DENTIST) {
-      throw new ForbiddenError(
-        'Δεν επιτρέπεται να δείτε άλλων οδοντιάτρων παραγγελίες!'
-      );
+    const { dentist } = order;
+    if (role === Roles.DENTIST) {
+      if (dentist._id.toString() !== userId.toString()) {
+        throw new ForbiddenError(
+          'Δεν επιτρέπεται να δείτε άλλων οδοντιάτρων παραγγελίες!'
+        );
+      }
     }
 
     return order;
@@ -186,6 +187,7 @@ export class OrderService extends DataLayerService<IOrder> {
       dentist: payload.dentist,
       description: payload.description,
       products: products.map((id) => new mongoose.Types.ObjectId(id)),
+      status: payload.sendDate ? OrderStatus.SEND : OrderStatus.NOT_SEND,
     } as IOrder;
 
     const updateOrder = await this.update(
@@ -209,6 +211,7 @@ export class OrderService extends DataLayerService<IOrder> {
     const order = await super.create({
       ...payload,
       totalCost,
+      status: payload.sendDate ? OrderStatus.SEND : OrderStatus.NOT_SEND,
       unPaid,
       createdBy: creator.userId,
     });

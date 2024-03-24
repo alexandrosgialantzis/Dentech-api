@@ -43,13 +43,9 @@ export class OrderController {
   }
 
   public async getOrders(req: Request, res: Response) {
-    const { year, search, status } = req.query;
+    const { search } = req.query;
 
-    const orders = await this.serv.getOrders({
-      year: year as string,
-      search: search as string,
-      status: status as OrderStatus,
-    });
+    const orders = await this.serv.getOrders(search as OrderStatus);
 
     res.status(StatusCodes.OK).json({ orders, totalCount: orders.length });
   }
@@ -71,12 +67,10 @@ export class OrderController {
 
   public async getMyOrders(req: Request, res: Response) {
     const { userId } = req.currentUser;
-    const { year, search, status } = req.query;
+    const { search } = req.query;
 
     const orders = await this.serv.getOrderByDentistId(userId.toString(), {
-      year: year as string,
       search: search as string,
-      status: status as OrderStatus,
     });
 
     res.status(StatusCodes.OK).json({ orders, totalCount: orders.length });
