@@ -94,4 +94,10 @@ export class UserController {
 
     res.status(StatusCodes.OK).json({ message });
   }
+
+  public async getAdmins(req: Request, res: Response) {
+    const { searchString } = req.query;
+    const users = await this.serv.getUsers(searchString as string);
+    res.status(StatusCodes.OK).json({ users, totalCount: users.length });
+  }
 }

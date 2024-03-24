@@ -16,7 +16,7 @@ export class UserService extends DataLayerService<IUser> {
     this.searchFields = ['fullName', 'role'];
   }
 
-  public async getUsers(searchString: string, id: string) {
+  public async getUsers(searchString: string, id?: string) {
     if (searchString === 'dentist') {
       searchString = Roles.DENTIST;
     }
