@@ -41,9 +41,7 @@ export class OrderService extends DataLayerService<IOrder> {
       .populate(this.populateOpt);
   }
 
-  public async getOrderByDentistId(dentistId: string, params?: IOrderParams) {
-    const { search } = params ?? ({} as IOrderParams);
-
+  public async getOrderByDentistId(dentistId: string, search: string) {
     const query = { dentist: dentistId };
     const searchQuery = createStatusSearchQuery(
       search as string | OrderStatus,
