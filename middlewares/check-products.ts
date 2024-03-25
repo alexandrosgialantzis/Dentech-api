@@ -40,14 +40,6 @@ export const checkProducts = async (
     }
   }
 
-  if (removeSet.size !== remove?.length) {
-    throw new BadRequestError('Υπάρχουν διπλότυπα προιόντα στην παραγγελία!');
-  }
-
-  if (addSet.size !== add?.length) {
-    throw new BadRequestError('Υπάρχουν διπλότυπα προιόντα στην παραγγελία!');
-  }
-
   next();
 };
 
@@ -71,10 +63,6 @@ export const checkProductsOnCreate = async (
     if (!product) {
       throw new NotFoundError('Το προιόν δεν βρέθηκε!');
     }
-  }
-
-  if (unique.size !== products.length) {
-    throw new BadRequestError('Υπάρχουν διπλότυπα προιόντα στην παραγγελία!');
   }
 
   next();
