@@ -37,6 +37,7 @@ const orderSchema = new Schema<IOrder>(
     description: {
       type: String,
     },
+    client: { type: String },
     numberOfOrder: { type: String, unique: true },
     status: {
       type: String,

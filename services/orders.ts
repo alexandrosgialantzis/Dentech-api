@@ -91,7 +91,7 @@ export class OrderService extends DataLayerService<IOrder> {
 
     let minus = 0;
     let total = order.totalCost;
-    let unpaid = 0;
+    let unpaid: null | number = null;
     let products = order.products.map((prd) => prd);
 
     const removeIds = payload.remove?.map((id) => id);
@@ -170,13 +170,14 @@ export class OrderService extends DataLayerService<IOrder> {
     const data = {
       takenDate: payload.takenDate,
       sendDate: payload.sendDate,
-      unPaid: unpaid || order.unPaid,
+      unPaid: unpaid ?? order.unPaid,
       totalCost: total,
       paid,
       dentist: payload.dentist,
       description: payload.description,
       products,
       status: payload.sendDate ? OrderStatus.SEND : OrderStatus.NOT_SEND,
+      client: payload.client,
     } as IOrder;
 
     const updateOrder = await this.update(

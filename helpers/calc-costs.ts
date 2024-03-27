@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import { BadRequestError } from '../errors/bad-request';
 import { ICalcCosts, IProductDB } from '../types/interfaces';
 import Product from '../models/Product';

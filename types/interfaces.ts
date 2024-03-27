@@ -92,6 +92,7 @@ export interface IOrderPayload extends Document {
   dentist: Types.ObjectId;
   remove?: string[];
   add?: IProductDB[];
+  client: string;
 }
 
 export interface ICalcCosts {
