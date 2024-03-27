@@ -25,7 +25,7 @@ export class OrderService extends DataLayerService<IOrder> {
     super(Order);
     this.select = '-createdAt';
     this.populateOpt = populateOrders;
-    this.searchFields = ['numberOfOrder', 'description', 'status'];
+    this.searchFields = ['numberOfOrder', 'description', 'status', 'client'];
   }
 
   public async getOrders(search: OrderStatus | string) {
