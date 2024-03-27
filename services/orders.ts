@@ -132,6 +132,12 @@ export class OrderService extends DataLayerService<IOrder> {
     }
 
     if (paid && !payload.add && !payload.add) {
+      if (paid > order.totalCost) {
+        throw new BadRequestError(
+          'Το συνολικό κόστος είναι μεγαλύτερο απο το εξοφλημένο ποσο!'
+        );
+      }
+      payload.sendDate = order.sendDate;
       unpaid = order.totalCost - paid;
     }
     if (!products.length) {
