@@ -32,14 +32,18 @@ export class ProductService extends DataLayerService<IProduct> {
   public async deleteProduct(productId: string) {
     const deletedProduct = await this.delete(productId);
 
-    const { orders, _id } = deletedProduct;
+    const { orders } = deletedProduct;
     if (orders.length) {
       for (const ord of orders) {
         const order = await Order.findOne({ _id: ord });
-        order?.products.filter(
-          (product) => product.id.toString() !== _id.toString()
-        );
-        await order?.save();
+        if (order) {
+          order.products = order.products.filter(
+            (product) => product.id.toString() !== productId
+          );
+          console.log(order.products);
+
+          await order?.save();
+        }
       }
     }
 
