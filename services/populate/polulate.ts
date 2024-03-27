@@ -11,7 +11,7 @@ export const populateProducts = [
 
 export const populateOrders = [
   {
-    path: 'products',
+    path: 'products.id',
     select: '_id name price',
   },
   {

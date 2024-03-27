@@ -1,18 +1,18 @@
 import mongoose from 'mongoose';
 import { BadRequestError } from '../errors/bad-request';
-import { ICalcCosts } from '../types/interfaces';
+import { ICalcCosts, IProductDB } from '../types/interfaces';
 import Product from '../models/Product';
 
 export const calcCosts = async (
   paid: number,
-  products: mongoose.Types.ObjectId[] | string[]
+  products: IProductDB[]
 ): Promise<ICalcCosts> => {
   let totalCost = 0;
   let unPaid = 0;
 
-  for (const prod of products) {
-    const product = await Product.findOne({ _id: prod });
-    totalCost += product?.price!;
+  for (const prd of products) {
+    const product = await Product.findOne({ _id: prd.id });
+    totalCost += product?.price! * prd.amount;
   }
 
   if (paid > totalCost) {

@@ -15,14 +15,10 @@ export const checkProducts = async (
     return next();
   }
 
-  const addSet = new Set();
-  const removeSet = new Set();
-
   if (add) {
     for (const prod of add) {
-      addSet.add(prod);
-
-      const product = await Product.findOne({ _id: prod });
+      const { id } = prod;
+      const product = await Product.findOne({ _id: id });
       if (!product) {
         throw new NotFoundError('Το προιόν δεν βρέθηκε!');
       }
@@ -30,10 +26,8 @@ export const checkProducts = async (
   }
 
   if (remove) {
-    for (const prod of remove ?? []) {
-      removeSet.add(prod);
-
-      const product = await Product.findOne({ _id: prod });
+    for (const id of remove ?? []) {
+      const product = await Product.findOne({ _id: id });
       if (!product) {
         throw new NotFoundError('Το προιόν δεν βρέθηκε!');
       }
@@ -50,16 +44,13 @@ export const checkProductsOnCreate = async (
 ) => {
   const { products } = req.body as IOrder;
 
-  if (!products?.length && products?.length) {
+  if (!products?.length) {
     throw new BadRequestError('Προσθέτε προιόντα!');
   }
 
-  const unique = new Set();
-
   for (const prod of products) {
-    unique.add(prod);
-
-    const product = await Product.findOne({ _id: prod });
+    const { id } = prod;
+    const product = await Product.findOne({ _id: id });
     if (!product) {
       throw new NotFoundError('Το προιόν δεν βρέθηκε!');
     }

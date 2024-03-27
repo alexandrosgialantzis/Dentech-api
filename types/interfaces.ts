@@ -1,3 +1,4 @@
+import { Interface } from 'readline';
 import { OrderStatus, Roles } from './enums';
 import { Document, Types } from 'mongoose';
 
@@ -63,6 +64,11 @@ export interface IProduct extends Document {
   orders: Types.ObjectId[];
 }
 
+export interface IProductDB {
+  id: string;
+  amount: number;
+}
+
 export interface IOrder extends Document {
   takenDate: Date;
   sendDate: Date;
@@ -74,7 +80,8 @@ export interface IOrder extends Document {
   description: string;
   numberOfOrder: string;
   status: OrderStatus;
-  products: Types.ObjectId[];
+  client: string;
+  products: IProductDB[];
 }
 
 export interface IOrderPayload extends Document {
@@ -83,8 +90,8 @@ export interface IOrderPayload extends Document {
   paid: number;
   description: string;
   dentist: Types.ObjectId;
-  remove?: Types.ObjectId[];
-  add?: Types.ObjectId[];
+  remove?: string[];
+  add?: IProductDB[];
 }
 
 export interface ICalcCosts {

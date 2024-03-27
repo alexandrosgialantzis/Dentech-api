@@ -47,8 +47,13 @@ const orderSchema = new Schema<IOrder>(
       default: OrderStatus.SEND,
     },
     products: {
-      type: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
-      required: [true, 'Προσθέστε προιόντα.'],
+      type: [
+        {
+          id: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+          amount: { type: Number, required: true },
+        },
+      ],
+      required: [true, 'Προσθέστε προιόντα και ποσότητα.'],
     },
   },
   { timestamps: true, versionKey: false }
@@ -57,7 +62,7 @@ const orderSchema = new Schema<IOrder>(
 orderSchema.pre('save', async function (next) {
   if (this.isNew) {
     const lastOrder = await Order.find().skip(
-      (await Order.countDocuments()) - 1
+      Math.max((await Order.countDocuments()) - 1, 0)
     );
 
     this.numberOfOrder = lastOrder[0]?.numberOfOrder
