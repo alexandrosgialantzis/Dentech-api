@@ -37,7 +37,7 @@ export class ProductService extends DataLayerService<IProduct> {
       for (const ord of orders) {
         const order = await Order.findOne({ _id: ord });
         order?.products.filter(
-          (productId) => productId.toString() !== _id.toString()
+          (productId) => productId.id.toString() !== _id.toString()
         );
         await order?.save();
       }
