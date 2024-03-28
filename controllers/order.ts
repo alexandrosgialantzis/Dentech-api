@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { OrderService } from '../services/orders';
 import { StatusCodes } from 'http-status-codes';
-import { IOrder, IUserWithId } from '../types/interfaces';
+import { IUserWithId } from '../types/interfaces';
 import { OrderStatus } from '../types/enums';
 
 export class OrderController {
