@@ -12,8 +12,7 @@ export const checkDentist =
 
     if (!dentist && isUpdating) {
       return next();
-    }
-    if (!dentist && !isUpdating) {
+    } else if (!dentist && !isUpdating) {
       throw new BadRequestError('Προσθέστε οδοντίατρο!');
     }
 
