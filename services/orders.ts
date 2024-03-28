@@ -96,7 +96,10 @@ export class OrderService extends DataLayerService<IOrder> {
 
     const removeIds = payload.remove?.map((id) => id);
 
+    let modifyProducts = false;
+
     if (removeIds?.length) {
+      modifyProducts = true;
       const remove = await Product.find({
         _id: { $in: removeIds },
       });
@@ -117,7 +120,7 @@ export class OrderService extends DataLayerService<IOrder> {
 
       for (const prd of removeIds ?? []) {
         const idStr = prd.toString();
-        products = products.filter((prud) => prud.id !== idStr);
+        products = products.filter((prud) => prud.id.toString() !== idStr);
       }
 
       total -= minus;
@@ -125,7 +128,10 @@ export class OrderService extends DataLayerService<IOrder> {
     }
 
     if (payload.add?.length) {
+      modifyProducts = true;
+
       const costs = await calcCosts(paid, payload.add);
+
       products = payload.add;
       total = costs.totalCost;
       unpaid = costs.unPaid;
@@ -140,9 +146,11 @@ export class OrderService extends DataLayerService<IOrder> {
       payload.sendDate = order.sendDate;
       unpaid = order.totalCost - paid;
     }
-    if (!products.length) {
+
+    if (modifyProducts && !products.length) {
       throw new BadRequestError('Προσθέστε προιόντα!');
     }
+
     if (paid > total) {
       throw new BadRequestError(
         'To εξοφλημένο ποσο ειναι μεγαλύτερο απο το συνολίκο!'
@@ -179,9 +187,9 @@ export class OrderService extends DataLayerService<IOrder> {
       unPaid: unpaid ?? order.unPaid,
       totalCost: total,
       paid,
+      products,
       dentist: payload.dentist,
       description: payload.description,
-      products,
       status: payload.sendDate ? OrderStatus.SEND : OrderStatus.NOT_SEND,
       client: payload.client,
     } as IOrder;
