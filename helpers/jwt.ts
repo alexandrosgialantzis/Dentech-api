@@ -28,7 +28,7 @@ export const attachTokens = (res: Response, user: IUserWithId | IUser) => {
     httpOnly: true,
     expires: new Date(Date.now() + sixMonths),
     secure: true,
-    sameSite: process.env.NODE_PROD ? 'none' : 'lax',
+    sameSite: 'none',
     signed: true,
   });
 
