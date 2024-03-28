@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { UserService } from '../services/user';
-import { IUserWithId } from '../types/interfaces';
-import { reattachTokens } from '../helpers/re-attack-tokens';
 
 export class UserController {
   private serv: UserService;
@@ -20,7 +18,7 @@ export class UserController {
     const { id } = req.params;
 
     const user = await this.serv.updateUser(body, id);
-    await reattachTokens(res, id);
+    req.session.user = user;
 
     res.status(StatusCodes.OK).json({
       user,
@@ -44,12 +42,13 @@ export class UserController {
 
     const user = await this.serv.deleteUser(id, role);
 
-    res.cookie('token', 'logout', {
-      httpOnly: true,
-      expires: new Date(Date.now() + 1000),
-      secure: true,
-      sameSite: 'none',
-      signed: true,
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Session destruction error:', err);
+        return res
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ message: 'Κάτι πήγε στραβά με την αποσύνδεση' });
+      }
     });
 
     res

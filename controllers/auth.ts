@@ -1,7 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
 import { AuthService } from '../services/auth';
-import { attachTokens } from '../helpers/jwt';
 
 export class AuthController {
   private serv: AuthService;
@@ -12,7 +11,7 @@ export class AuthController {
   public async register(req: Request, res: Response) {
     const { body } = req;
     const user = await this.serv.register(body);
-    attachTokens(res, user);
+    req.session.user = user;
 
     res
       .status(StatusCodes.CREATED)
@@ -22,20 +21,20 @@ export class AuthController {
   public async login(req: Request, res: Response) {
     const { body } = req;
     const user = await this.serv.login(body);
-    attachTokens(res, user);
-
+    req.session.user = user;
     res.status(StatusCodes.OK).json({ user, message: 'Συνδεθήκατε!' });
   }
 
   logout(req: Request, res: Response) {
-    res.cookie('token', 'logout', {
-      httpOnly: true,
-      expires: new Date(Date.now() + 1000),
-      secure: true,
-      sameSite: 'none',
-      signed: true,
-    });
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Session destruction error:', err);
+        return res
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ message: 'Κάτι πήγε στραβά με την αποσύνδεση' });
+      }
 
-    res.status(StatusCodes.OK).json({ message: 'Αποσυνδεθήκατε!' });
+      res.status(StatusCodes.OK).json({ message: 'Αποσυνδεθήκατε!' });
+    });
   }
 }

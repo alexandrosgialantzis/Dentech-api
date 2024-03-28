@@ -7,6 +7,7 @@ import cors from 'cors';
 import mongoSanitize from 'express-mongo-sanitize';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
+import session, { SessionData, Session } from 'express-session';
 
 import { InternalServerError } from './errors/internal-server-error';
 import { connectDB } from './db/connect';
@@ -39,7 +40,6 @@ dotenv.config();
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
-server.use(cookieParser(process.env.JWT_SECRET));
 server.use(cors(corsOpt));
 server.use(express.json());
 server.use(mongoSanitize());
@@ -54,7 +54,31 @@ declare global {
   }
 }
 
+declare module 'express-session' {
+  interface SessionData {
+    user?: IUserWithId;
+  }
+}
+
+declare module 'express-serve-static-core' {
+  interface Request {
+    session: Session & Partial<SessionData>;
+  }
+}
+
 const port = process.env.PORT || 4500;
+
+server.use(
+  session({
+    secret: process.env.JWT_SECRET ?? 'secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 1000 * 60 * 60 * 24 * 30 * 30,
+    },
+  })
+);
 
 server.use('/api/v1', keepRouter);
 server.use('/api/v1/auth', authRouter);

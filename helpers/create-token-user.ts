@@ -1,6 +1,6 @@
 import { IUser, IUserWithId } from '../types/interfaces';
 
-export const createTokenUser = (user: IUser) =>
+export const createSessionUser = (user: IUser) =>
   ({
     userId: user._id,
     fullName: user.fullName,

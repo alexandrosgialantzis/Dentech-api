@@ -2,9 +2,9 @@ import { DataLayerService } from './general-services/data-layer';
 import { BadRequestError } from '../errors/bad-request';
 import User from '../models/User';
 import { ForbiddenError } from '../errors/forbidden';
-import { createTokenUser } from '../helpers/create-token-user';
 import { IPasswordPayload, IUser } from '../types/interfaces';
 import { Roles } from '../types/enums';
+import { createSessionUser } from '../helpers/create-token-user';
 
 export class UserService extends DataLayerService<IUser> {
   private select: string;
@@ -58,7 +58,7 @@ export class UserService extends DataLayerService<IUser> {
   public async updateUser(payload: IUser, userId: string) {
     await super.validateData(payload);
     const updatedUser = await this.update(userId, payload, this.select);
-    return createTokenUser(updatedUser);
+    return createSessionUser(updatedUser);
   }
 
   public async changePassword(userId: string, payload: IPasswordPayload) {

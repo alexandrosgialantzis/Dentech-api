@@ -1,5 +1,5 @@
 import { UnauthorizedError } from '../errors/unauthorized';
-import { createTokenUser } from '../helpers/create-token-user';
+import { createSessionUser } from '../helpers/create-token-user';
 import { IUser } from '../types/interfaces';
 import { DataLayerService } from './general-services/data-layer';
 import User from '../models/User';
@@ -18,7 +18,7 @@ export class AuthService extends DataLayerService<IUser> {
 
     const user = await super.create(payload);
 
-    return createTokenUser(user);
+    return createSessionUser(user);
   }
 
   public async login(payload: IUser) {
@@ -34,6 +34,6 @@ export class AuthService extends DataLayerService<IUser> {
       throw new UnauthorizedError('Το e-mail η ο κωδίκος είναι λάθος!');
     }
 
-    return createTokenUser(user);
+    return createSessionUser(user);
   }
 }
