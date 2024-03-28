@@ -3,6 +3,7 @@ import { NotFoundError } from '../errors/not-found';
 import { IOrder } from '../types/interfaces';
 import User from '../models/User';
 import { Roles } from '../types/enums';
+import { BadRequestError } from '../errors/bad-request';
 
 export const checkDentist =
   (isUpdating = false) =>
@@ -11,6 +12,9 @@ export const checkDentist =
 
     if (!dentist && isUpdating) {
       return next();
+    }
+    if (!dentist && !isUpdating) {
+      throw new BadRequestError('Προσθέστε οδοντίατρο!');
     }
 
     const user = await User.findOne({ _id: dentist });
