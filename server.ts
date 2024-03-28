@@ -83,6 +83,7 @@ server.use(
     },
   })
 );
+console.log(process.env.NODE_ENV);
 
 server.use('/api/v1', keepRouter);
 server.use('/api/v1/auth', authRouter);
