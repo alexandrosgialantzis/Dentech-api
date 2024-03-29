@@ -73,14 +73,16 @@ const port = process.env.PORT || 4500;
 
 server.use(
   session({
+    name: 'myCookie',
     secret: process.env.JWT_SECRET ?? 'secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.IS_PROD === 'true',
+      secure: true,
       maxAge: 1000 * 60 * 60 * 24 * 30 * 30,
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      sameSite: 'lax',
       httpOnly: true,
+      domain: 'https://dentech-mng.netlify.app',
     },
   })
 );
