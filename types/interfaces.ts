@@ -95,6 +95,17 @@ export interface IOrderPayload extends Document {
   client: string;
 }
 
+export interface ICredit extends Document {
+  creditYear: string;
+  creditMonth: string;
+  totalCreditAmount: number;
+  amountUsed: number;
+  amountUnused: number;
+  isCreditActive: boolean;
+  dentist: Types.ObjectId;
+  createdBy: Types.ObjectId;
+  orders: Types.ObjectId[];
+}
 export interface ICalcCosts {
   totalCost: number;
   unPaid: number;
