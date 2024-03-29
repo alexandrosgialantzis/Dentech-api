@@ -44,7 +44,6 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(cookieParser(process.env.JWT_SECRET));
 server.use(cors(corsOpt));
-server.use(express.json());
 server.use(mongoSanitize());
 server.use(morgan('dev'));
 server.use(rateLimit(limiterOpt));
@@ -73,6 +72,7 @@ const port = process.env.PORT || 4500;
 
 server.use(
   session({
+    name: 'myCookie',
     secret: process.env.JWT_SECRET ?? 'secret',
     resave: false,
     saveUninitialized: false,
@@ -81,6 +81,7 @@ server.use(
       maxAge: 1000 * 60 * 60 * 24 * 30 * 30,
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       httpOnly: true,
+      domain: '.https://dentech-mng.netlify.app',
     },
   })
 );
