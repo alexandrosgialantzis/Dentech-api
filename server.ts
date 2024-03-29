@@ -39,6 +39,7 @@ const server = express();
 dotenv.config();
 
 server.set('trust proxy', 1);
+
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(cookieParser(process.env.JWT_SECRET));
@@ -83,7 +84,6 @@ server.use(
     },
   })
 );
-console.log(process.env.NODE_ENV);
 
 server.use('/api/v1', keepRouter);
 server.use('/api/v1/auth', authRouter);

@@ -10,13 +10,12 @@ export const authenticateUser = async (
 ) => {
   if (!req.session.user) {
     throw new ForbiddenError('Απαγορεύται η πρόσβαση, δεν βρέθηκε χρήστης!');
-  } else {
-    try {
-      req.currentUser = req.session.user;
-      next();
-    } catch (error) {
-      throw new ForbiddenError('Απαγορεύται η πρόσβαση!');
-    }
+  }
+  try {
+    req.currentUser = req.session.user;
+    next();
+  } catch (error) {
+    throw new ForbiddenError('Απαγορεύται η πρόσβαση!');
   }
 };
 

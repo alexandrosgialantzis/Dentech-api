@@ -5,7 +5,12 @@ export const headersMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  res.header('Access-Control-Allow-Origin', req.header('Origin'));
+  res.header('Access-Control-Allow-Origin', req.header('Origin') || '*');
+  res.set('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.set(
+    'Access-Control-Allow-Headers',
+    'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept'
+  );
 
   next();
 };

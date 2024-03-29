@@ -1,7 +1,7 @@
 export enum Roles {
   ADMIN = 'Διαχειριστής',
   DENTIST = 'Οδοντίατρος',
-  UNCATEGORIZED = 'Απλώς χρήστης',
+  UNCATEGORIZED = 'Απλός χρήστης',
 }
 
 export enum OrderStatus {
