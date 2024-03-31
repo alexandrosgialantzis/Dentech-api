@@ -26,7 +26,7 @@ import orderRouter from './routes/order';
 import keepRouter from './routes/keep';
 
 const corsOpt = {
-  origin: true,
+  origin: ['https://dentech-mng.netlify.app', 'http://localhost:5173'],
   credentials: true,
 };
 const limiterOpt = {
@@ -37,8 +37,6 @@ const limiterOpt = {
 const server = express();
 
 dotenv.config();
-
-server.set('trust proxy', 1);
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
