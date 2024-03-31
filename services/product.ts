@@ -40,7 +40,6 @@ export class ProductService extends DataLayerService<IProduct> {
           order.products = order.products.filter(
             (product) => product.id.toString() !== productId
           );
-          console.log(order.products);
 
           await order?.save();
         }

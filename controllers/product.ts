@@ -39,7 +39,7 @@ export class ProductController {
 
   public async getProducts(req: Request, res: Response) {
     const { searchString } = req.query;
-    console.log(req.baseUrl, req.originalUrl);
+
     const products = await this.serv.getProducts(searchString as string);
     res.status(StatusCodes.OK).json({ products, totalCount: products.length });
   }
