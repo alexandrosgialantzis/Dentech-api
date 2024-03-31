@@ -26,7 +26,7 @@ import orderRouter from './routes/order';
 import keepRouter from './routes/keep';
 
 const corsOpt = {
-  origin: ['https://dentech-mng.netlify.app', 'http://localhost:5173'],
+  origin: true,
   credentials: true,
 };
 const limiterOpt = {
