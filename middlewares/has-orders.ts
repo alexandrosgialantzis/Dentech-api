@@ -10,3 +10,13 @@ export const hasOrders = (req: Request, res: Response, next: NextFunction) => {
 
   next();
 };
+
+export const hasOrder = (req: Request, res: Response, next: NextFunction) => {
+  const { order } = req.body;
+
+  if (order) {
+    throw new ConflictError('Απαγορευεται να δώσετε παραγγελία!');
+  }
+
+  next();
+};

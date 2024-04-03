@@ -56,6 +56,15 @@ const orderSchema = new Schema<IOrder>(
       ],
       required: [true, 'Προσθέστε προιόντα και ποσότητα.'],
     },
+    credits: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'Credit',
+        },
+      ],
+      default: null,
+    },
   },
   { timestamps: true, versionKey: false }
 );

@@ -24,6 +24,7 @@ import userRouter from './routes/user';
 import productRouter from './routes/product';
 import orderRouter from './routes/order';
 import keepRouter from './routes/keep';
+import creditRouter from './routes/credit';
 
 const corsOpt = {
   origin: ['https://dentech-mng.netlify.app', 'http://localhost:5173'],
@@ -37,8 +38,6 @@ const limiterOpt = {
 const server = express();
 
 dotenv.config();
-
-server.set('trust proxy', 1);
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
@@ -56,38 +55,18 @@ declare global {
   }
 }
 
-declare module 'express-session' {
-  interface SessionData {
-    user?: IUserWithId;
-  }
-}
-
-declare module 'express-serve-static-core' {
-  interface Request {
-    session: Session & Partial<SessionData>;
-  }
-}
-
 const port = process.env.PORT || 4500;
-
-server.use(
-  session({
-    secret: process.env.JWT_SECRET ?? 'secret',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: true,
-      maxAge: 1000 * 60 * 60 * 24 * 30 * 30,
-      sameSite: 'none',
-      httpOnly: true,
-    },
-  })
-);
 
 server.use('/api/v1', keepRouter);
 server.use('/api/v1/auth', authRouter);
 server.use('/api/v1/user', authenticateUser, userRouter);
 server.use('/api/v1/order', authenticateUser, orderRouter);
+server.use(
+  '/api/v1/credit',
+  authenticateUser,
+  authorizePermissions(Roles.ADMIN),
+  creditRouter
+);
 server.use(
   '/api/v1/product',
   authenticateUser,

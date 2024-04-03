@@ -17,11 +17,11 @@ export class UserController {
     const { body } = req;
     const { id } = req.params;
 
-    const user = await this.serv.updateUser(body, id);
-    req.session.user = user;
+    const result = await this.serv.updateUser(body, id);
 
     res.status(StatusCodes.OK).json({
-      user,
+      user: result.user,
+      token: result.token,
       message: 'Ο χρήστης ενημερώθηκε!',
     });
   }
@@ -41,15 +41,6 @@ export class UserController {
     const { role } = req.currentUser;
 
     const user = await this.serv.deleteUser(id, role);
-
-    req.session.destroy((err) => {
-      if (err) {
-        console.error('Session destruction error:', err);
-        return res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Κάτι πήγε στραβά με την αποσύνδεση' });
-      }
-    });
 
     res
       .status(StatusCodes.OK)

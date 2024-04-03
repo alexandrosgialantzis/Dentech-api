@@ -13,10 +13,6 @@ router.post(
   authController.register.bind(authController)
 );
 router.post('/login', isLoggedIn, authController.login.bind(authController));
-router.get(
-  '/logout',
-  isNotLoggedIn,
-  authController.logout.bind(authController)
-);
+router.get('/logout', authController.logout.bind(authController));
 
 export default router;

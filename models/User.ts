@@ -1,12 +1,14 @@
 import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { Roles } from '../types/enums';
-import { IUser } from '../types/interfaces';
+import { IUser, IUserWithId } from '../types/interfaces';
 import {
   validateCellPhone,
   validateTelephone,
   validateEmail,
 } from '../helpers/model-validators';
+import jwt from 'jsonwebtoken';
+import { InternalServerError } from '../errors/internal-server-error';
 
 const userSchema = new Schema<IUser>(
   {
@@ -69,6 +71,26 @@ userSchema.methods.comparePassword = async function (
   candidatePassword: string
 ): Promise<boolean> {
   return await bcrypt.compare(candidatePassword, this.password);
+};
+
+userSchema.methods.createJWT = function (): string {
+  if (!process.env.JTW_SECRET) {
+    throw new InternalServerError('Κάτι πήγε στραβά!');
+  }
+  const user = {
+    userId: this._id,
+    fullName: this.fullName,
+    telephone: this.telephone,
+    cellPhone: this.cellPhone,
+    role: this.role,
+    email: this.email,
+  } as IUserWithId;
+
+  const lifeTime = {
+    expiresIn: process.env.JWT_LIFETIME,
+  };
+
+  return jwt.sign(user, process.env.JTW_SECRET, lifeTime);
 };
 
 const User = mongoose.model<IUser>('User', userSchema);

@@ -51,13 +51,7 @@ export class ProductService extends DataLayerService<IProduct> {
 
   public async updateProduct(payload: IProduct, productId: string) {
     await super.validateData(payload);
-    const updateProduct = await this.update(
-      productId,
-      payload,
-      this.select,
-      this.populateOpt
-    );
-    return updateProduct;
+    return await this.update(productId, payload, this.select, this.populateOpt);
   }
 
   public async createProduct(payload: IProduct, creator: IUserWithId) {

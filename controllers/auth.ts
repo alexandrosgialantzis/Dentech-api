@@ -10,31 +10,26 @@ export class AuthController {
 
   public async register(req: Request, res: Response) {
     const { body } = req;
-    const user = await this.serv.register(body);
-    req.session.user = user;
+    const result = await this.serv.register(body);
 
-    res
-      .status(StatusCodes.CREATED)
-      .json({ user, message: 'Η εγγραφή ολοκληρώθηκε!' });
+    res.status(StatusCodes.CREATED).json({
+      user: result.user,
+      token: result.token,
+      message: 'Συνδεθήκατε!',
+    });
   }
 
   public async login(req: Request, res: Response) {
     const { body } = req;
-    const user = await this.serv.login(body);
-    req.session.user = user;
-    res.status(StatusCodes.OK).json({ user, message: 'Συνδεθήκατε!' });
+    const result = await this.serv.login(body);
+    res.status(StatusCodes.OK).json({
+      user: result.user,
+      token: result.token,
+      message: 'Συνδεθήκατε!',
+    });
   }
 
   logout(req: Request, res: Response) {
-    req.session.destroy((err) => {
-      if (err) {
-        console.error('Session destruction error:', err);
-        return res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Κάτι πήγε στραβά με την αποσύνδεση' });
-      }
-
-      res.status(StatusCodes.OK).json({ message: 'Αποσυνδεθήκατε!' });
-    });
+    res.status(StatusCodes.OK).json({ message: 'Αποσυνδεθήκατε!' });
   }
 }

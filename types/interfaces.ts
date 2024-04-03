@@ -1,5 +1,5 @@
 import { Interface } from 'readline';
-import { OrderStatus, Roles } from './enums';
+import { CreditStatus, OrderStatus, Roles } from './enums';
 import { Document, Types } from 'mongoose';
 
 export interface ICustomError {
@@ -35,6 +35,12 @@ export interface IUser extends Document {
   cellPhone?: number;
   telephone?: number;
   comparePassword(candidatePassword: string): Promise<boolean>;
+  createJWT(): string;
+}
+
+export interface IUserWithToken {
+  user: IUserWithId;
+  token: string;
 }
 
 export interface IUserWithId extends IUser {
@@ -82,6 +88,7 @@ export interface IOrder extends Document {
   status: OrderStatus;
   client: string;
   products: IProductDB[];
+  credits: Types.ObjectId[];
 }
 
 export interface IOrderPayload extends Document {
@@ -93,19 +100,19 @@ export interface IOrderPayload extends Document {
   remove?: string[];
   add?: IProductDB[];
   client: string;
+  credits: Types.ObjectId[];
 }
 
 export interface ICredit extends Document {
-  creditYear: string;
-  creditMonth: string;
-  totalCreditAmount: number;
-  amountUsed: number;
-  amountUnused: number;
-  isCreditActive: boolean;
+  year: string;
+  month: string;
+  amount: number;
+  isUsed: CreditStatus;
   dentist: Types.ObjectId;
   createdBy: Types.ObjectId;
-  orders: Types.ObjectId[];
+  order: Types.ObjectId | null;
 }
+
 export interface ICalcCosts {
   totalCost: number;
   unPaid: number;

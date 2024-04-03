@@ -15,6 +15,7 @@ import { BadRequestError } from '../errors/bad-request';
 import { OrderStatus, Roles } from '../types/enums';
 import { createStatusSearchQuery } from '../helpers/create-search-with-status';
 import { ForbiddenError } from '../errors/forbidden';
+import { handleCredits } from '../helpers/handle-credits';
 
 export class OrderService extends DataLayerService<IOrder> {
   private select: string;
@@ -192,6 +193,7 @@ export class OrderService extends DataLayerService<IOrder> {
       description: payload.description,
       status: payload.sendDate ? OrderStatus.SEND : OrderStatus.NOT_SEND,
       client: payload.client,
+      credits: payload.credits,
     } as IOrder;
 
     const updateOrder = await this.update(
@@ -200,6 +202,9 @@ export class OrderService extends DataLayerService<IOrder> {
       this.select,
       this.populateOpt
     );
+
+    const { _id } = updateOrder;
+    await handleCredits(_id, payload.credits, updateOrder.credits);
 
     return updateOrder;
   }
