@@ -14,6 +14,7 @@ import { checkDentist } from '../middlewares/is-dentist-exists';
 import { checkSendDate, checkTakenDate } from '../middlewares/check-dates';
 import { hasNumberOrStatus } from '../middlewares/has-send-or-number';
 import { isCreditExists } from '../middlewares/is-credit-exists';
+import { isDentistsCredit } from '../middlewares/is-dentists-credit';
 
 const orderController = new OrderController();
 const router = express.Router();
@@ -29,6 +30,7 @@ router.post(
   hasNumberOrStatus,
   checkProductsOnCreate,
   isCreditExists,
+  isDentistsCredit,
   orderController.createOrder.bind(orderController)
 );
 router.get(
@@ -60,6 +62,7 @@ router.patch(
   checkProducts,
   isEntityExists(Order),
   isCreditExists,
+  isDentistsCredit,
   orderController.updateOrder.bind(orderController)
 );
 router.get(

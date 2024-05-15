@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { BadRequestError } from '../errors/bad-request';
 import { IOrder } from '../types/interfaces';
 import Credit from '../models/Credit';
 import { NotFoundError } from '../errors/not-found';

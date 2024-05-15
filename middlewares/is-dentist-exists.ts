@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { NotFoundError } from '../errors/not-found';
-import { IOrder } from '../types/interfaces';
 import User from '../models/User';
 import { Roles } from '../types/enums';
 import { BadRequestError } from '../errors/bad-request';

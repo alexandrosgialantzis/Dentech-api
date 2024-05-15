@@ -55,10 +55,5 @@ router.patch(
   isEntityExists(User),
   userController.changeUserRole.bind(userController)
 );
-router.get(
-  '/get-admins',
-  authorizePermissions(Roles.UNCATEGORIZED),
-  userController.getAdmins.bind(userController)
-);
 
 export default router;

@@ -10,7 +10,7 @@ export enum OrderStatus {
 }
 
 export enum CreditStatus {
-  USED = 'χρησιμοποιημένη',
+  USED = 'Χρησιμοποιημένη',
   UNUSED = 'Μη χρησιμοποιημένη',
 }
 

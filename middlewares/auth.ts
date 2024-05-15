@@ -45,6 +45,7 @@ export const isLoggedIn = async (
   if (authHeader || authHeader?.startsWith('Bearer ')) {
     throw new UnauthorizedError('Είστε συνδεμένος!');
   }
+
   next();
 };
 
