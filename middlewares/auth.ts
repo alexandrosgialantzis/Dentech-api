@@ -31,7 +31,7 @@ export const authenticateUser = async (
 
     next();
   } catch (error) {
-    throw new UnauthorizedError('Δεν βρέθηκε χρήστης');
+    throw new UnauthorizedError('Δεν βρέθηκε χρήστης, διαγραφή!!!');
   }
 };
 
